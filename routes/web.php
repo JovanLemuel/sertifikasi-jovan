@@ -13,6 +13,10 @@ Route::get('/dashboard', function () {
     return view('admin.dashboard');
 });
 
-Route::resource('buku', BukuController::class);
 Route::resource('kategori', KategoriController::class);
 Route::resource('user', UserController::class);
+Route::resource('buku', BukuController::class);
+
+Route::post('/buku/{buku}/pinjam', [BukuController::class, 'pinjamBuku'])->name('buku.pinjamBuku');
+Route::post('/buku/{buku}/kembalikan', [BukuController::class, 'kembalikanBuku'])->name('buku.kembalikanBuku');
+

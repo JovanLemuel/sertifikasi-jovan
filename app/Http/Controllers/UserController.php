@@ -37,7 +37,7 @@ class UserController extends Controller
 
         User::create($request->only('name', 'email', 'telp'));
 
-        return redirect()->route('user.index')->with('success', 'User created successfully.');
+        return redirect()->route('user.index')->with('success', 'User telah terbuat');
     }
 
     /**
@@ -69,7 +69,7 @@ class UserController extends Controller
 
         $user->update($request->only('name', 'email', 'telp'));
 
-        return redirect()->route('user.index')->with('success', 'User updated successfully.');
+        return redirect()->route('user.index')->with('success', 'User telah terubah');
     }
 
     /**
@@ -78,6 +78,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('user.index')->with('success', 'User deleted successfully.');
+        return redirect()->route('user.index')->with('success', 'User telah terhapus');
     }
 }

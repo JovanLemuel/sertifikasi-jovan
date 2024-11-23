@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\User;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class BukuController extends Controller
@@ -12,7 +14,9 @@ class BukuController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all();
+        $bukus = Buku::all();
+        return view('admin.buku-index', compact('bukus', 'users'));
     }
 
     /**
@@ -20,7 +24,8 @@ class BukuController extends Controller
      */
     public function create()
     {
-        //
+        $kategoris = Kategori::all();
+        return view('admin.buku-create', compact('kategoris'));
     }
 
     /**
@@ -28,7 +33,17 @@ class BukuController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_buku' => 'required|string|max:255',
+            'deskripsi_buku' => 'required|string',
+            'kategori' => 'required|array',
+            'kategori.*' => 'exists:kategoris,id',
+        ]);
+
+        $buku = Buku::create($request->only('nama_buku', 'deskripsi_buku'));
+        $buku->kategori()->sync($request->kategori);
+
+        return redirect()->route('buku.index')->with('success', 'Buku telah terbuat');
     }
 
     /**
@@ -44,7 +59,8 @@ class BukuController extends Controller
      */
     public function edit(Buku $buku)
     {
-        //
+        $kategoris = Kategori::all();
+        return view('admin.buku-edit', compact('buku', 'kategoris'));
     }
 
     /**
@@ -52,7 +68,17 @@ class BukuController extends Controller
      */
     public function update(Request $request, Buku $buku)
     {
-        //
+        $request->validate([
+            'nama_buku' => 'required|string|max:255',
+            'deskripsi_buku' => 'required|string',
+            'kategori' => 'required|array',
+            'kategori.*' => 'exists:kategoris,id',
+        ]);
+
+        $buku->update($request->only('nama_buku', 'deskripsi_buku'));
+        $buku->kategori()->sync($request->kategori);
+
+        return redirect()->route('buku.index')->with('success', 'Buku telah terubah');
     }
 
     /**
@@ -60,6 +86,29 @@ class BukuController extends Controller
      */
     public function destroy(Buku $buku)
     {
-        //
+        $buku->delete();
+        return redirect()->route('buku.index')->with('success', 'Buku telah terhapus');
+    }
+
+    public function pinjamBuku(Request $request, Buku $buku)
+    {
+        if ($buku->user_id !== null) {
+            return redirect()->back()->with('error', 'Buku sudah dipinjam');
+        }
+
+        $buku->update(['user_id' => $request->user_id]);
+
+        return redirect()->route('buku.index')->with('success', 'Buku telah dipinjam');
+    }
+
+    public function kembalikanBuku(Buku $buku)
+    {
+        if ($buku->user_id === null) {
+            return redirect()->back()->with('error', 'This book is not currently borrowed.');
+        }
+
+        $buku->update(['user_id' => null]);
+
+        return redirect()->route('buku.index')->with('success', 'Buku telah dikembalikan');
     }
 }
