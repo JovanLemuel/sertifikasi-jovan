@@ -5,7 +5,44 @@
 @section('content')
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold">Admin Buku</h1>
-        <a href="{{ route('buku.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md">Create</a>
+    </div>
+
+    <div class="flex justify-between items-end mb-6">
+        <form method="GET" action="{{ route('buku.index') }}" class="flex gap-4">
+            <div>
+                <label for="kategori_id" class="block text-sm font-medium text-gray-700">Filter Kategori</label>
+                <select id="kategori_id" name="kategori_id" class="border rounded-md px-4 py-2">
+                    <option value="">semua</option>
+                    @foreach ($kategoris as $kategori)
+                        <option value="{{ $kategori->id }}" {{ request('kategori_id') == $kategori->id ? 'selected' : '' }}>
+                            {{ $kategori->nama_kategori }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label for="user_id" class="block text-sm font-medium text-gray-700">Filter User</label>
+                <select id="user_id" name="user_id" class="border rounded-md px-4 py-2">
+                    <option value="">semua</option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                            {{ $user->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="flex items-end">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Filter
+                </button>
+            </div>
+        </form>
+
+        <a href="{{ route('buku.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+            Create
+        </a>
     </div>
 
     <table class="table-auto w-full bg-white rounded-lg shadow-md">

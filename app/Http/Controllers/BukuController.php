@@ -12,11 +12,25 @@ class BukuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $users = User::all();
-        $bukus = Buku::all();
-        return view('admin.buku-index', compact('bukus', 'users'));
+        $kategoris = Kategori::all();
+        $query = Buku::query();
+
+        if ($request->kategori_id) {
+            $query->whereHas('kategori', function ($q) use ($request) {
+                $q->where('kategoris.id', $request->kategori_id);
+            });
+        }
+
+        if ($request->user_id) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        $bukus = $query->get();
+
+        return view('admin.buku-index', compact('bukus', 'kategoris', 'users'));
     }
 
     /**
