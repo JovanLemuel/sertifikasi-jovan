@@ -17,18 +17,18 @@ class UserSeeder extends Seeder
         $data = [
             [
                 'name' => "Jovan",
-                'email' => "admin@admin",
-                'password' => Hash::make('admin123'),
+                'email' => "user@user",
+                'telp' => "0111",
             ],
             [
                 'name' => "user 1",
                 'email' => "user1@user",
-                'password' => Hash::make('user123'),
+                'telp' => "0112",
             ],
             [
                 'name' => "user 2",
                 'email' => "user2@user",
-                'password' => Hash::make('user123'),
+                'telp' => "0113",
             ],
         ];
 
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
             User::create([
                 'name' => $item['name'],
                 'email' => $item['email'],
-                'password' => $item['password'],
+                'telp' => $item['telp'],
             ]);
         }
     }
